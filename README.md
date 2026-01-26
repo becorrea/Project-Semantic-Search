@@ -9,10 +9,13 @@ Automatizar o processo de coerência em situações específicas. Ex.: Assimilar
 ## Tecnologias
 
 - Python 3.14
-- scikit-learn
+- pg_vector
 - numpy
-- sentence-transformer
-- cosine_similarit
+- Sentence_Transformer
+- Google AI
+- Supabase
+- Fast API
+
 
 
 ## Instalação
@@ -21,19 +24,17 @@ pip install -r requeriments.txt
 
 ## Como usar
 
-python main.py
+python -m uvicorn app.main:app --reload -> para rodar a FastAPI na porta local
 
 ## Estrutura do Projeto
 
-A pasta main.py é o core do projeto, é nela que os textos são analisados, vetorizados, relacionados e por fim rankeados
+
 
 ## Exemplo de Uso
 
 ## Limitações / próximos passos
 
-- Sincronizar com uma DB
 - Fazer a DB híbrida
-- FastAPI + arquitetura limpa
 - LLM
 - Frontend (html+css)
 - Frontend (react)
