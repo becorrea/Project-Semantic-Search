@@ -20,7 +20,16 @@ Automatizar o processo de coerência em situações específicas. Ex.: Assimilar
 
 ## Instalação
 
-pip install -r requeriments.txt
+-- Python 3.14.2 --
+pip install numpy
+pip install sentence-transformers torch
+pip install supabase
+pip install python-dotenv
+pip install fastapi
+pip install supabase sentence-transformers python-dotenv
+pip install uvicorn
+pip install pymupdf python-multipart
+pip install json 
 
 ## Como usar
 
@@ -34,9 +43,3 @@ python -m uvicorn app.main:app --reload -> para rodar a FastAPI na porta local
 
 ## Limitações / próximos passos
 
-- Fazer a DB híbrida
-- LLM
-- Frontend (html+css)
-- Frontend (react)
-- MVP
-- PyTorch(se possível)
