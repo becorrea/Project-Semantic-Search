@@ -7,7 +7,7 @@ class DocumentRepository:
         self.client = supabase
         self.embedder = EmbeddingService()
     
-    def save_document(self, nome, content, tipo, categoria):
+    def save_document(self, nome, content, tipo, categoria, localizacao):
         
         vector = self.embedder.embed(content)
 
@@ -16,7 +16,9 @@ class DocumentRepository:
             "content": content,
             "tipo": tipo,
             "categoria": categoria,
-            "embedding": vector
+            "localizacao": localizacao,
+            "embedding": vector,
+            
         }
         
         response = self.client.table("documents").insert(document_data).execute()
