@@ -1,10 +1,11 @@
 from app.db.supabase_client import supabase
 from app.embedding_service import EmbeddingService
 
+
 class DocumentRepository:
-    def __init__(self,supabase_client ,embedding_service):
-        self.client = supabase_client
-        self.embedder = embedding_service
+    def __init__(self):
+        self.client = supabase
+        self.embedder = EmbeddingService()
     
     def save_document(self, nome, content, tipo, categoria):
         

@@ -72,7 +72,9 @@ def buscar_inteligente(query: str, top_k: int = 3):
 
         return {
             "origem": "gerado_pela_ia",
-            "analise_da_ia": explicacao,
+
+            
+
             "resultados": documents
         }
     except Exception as e:
