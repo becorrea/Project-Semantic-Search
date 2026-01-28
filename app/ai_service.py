@@ -4,12 +4,13 @@ import os
 import json
 
 
-client = genai.Client(api_key="AIzaSyDHnRRegaNH3K-M6MO1Ib-PGrAt0q7cnaM")
+
+client = genai.Client(api_key="AIzaSyBuKaKYHApgZ1UecMbsD46RgnwC5Mrh9mo")
 
 
 class AIService:
     def __init__(self):
-        self.client = genai.Client(api_key=('AIzaSyDHnRRegaNH3K-M6MO1Ib-PGrAt0q7cnaM'))
+        self.client = genai.Client(api_key=('AIzaSyBuKaKYHApgZ1UecMbsD46RgnwC5Mrh9mo'))
         self.model_id = 'models/gemini-2.5-flash'
     
     def extrair_pdf(self, content: bytes) -> str:
@@ -37,17 +38,10 @@ class AIService:
         Responda APENAS o JSON, sem textos adicionais.
         """
         response = self.client.models.generate_content(
-            model= self.model_id,
-            contents = prompt
+        model= self.model_id,
+        contents = prompt
         )
 
         limpo = response.text.replace("```json", "").replace("```", "").strip()
 
         return json.loads(limpo)
-    def explicar_match(self, query, documentos):
-        prompt = f"Com base na pergunta '{query}', explique porque estes candidatos são ideais: {documentos}"
-
-        response = self.client.models.generate_content(model=self.model_id, contents=prompt)
-
-        
-        return response.text

@@ -57,20 +57,18 @@ def buscar_inteligente(query: str, localizacao: str = None, tipo: str = None, ca
         if cache_check.data:
             return {
                 "origem": "cache_do_banco",
-                "analise_da_ia": cache_check.data[0]["ai_response"]
+                "resultados": documents
             }
         
         
 
-        explicacao = ai_assistant.explicar_match(query, documents)
+     
 
         supabase.table("query_logs").insert({
             "query_text": query,
-            "ai_response": explicacao
         }).execute()
 
         return {
-            "analise_ia": explicacao,
             "resultados": documents
         }
     except Exception as e:
