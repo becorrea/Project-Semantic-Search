@@ -1,26 +1,33 @@
 from app.db.supabase_client import supabase
-from app.embedding_service import EmbeddingService
+from app.db.vectorize_db import generate_embeddings
 
 
 class DocumentRepository:
     def __init__(self):
         self.client = supabase
-        self.embedder = EmbeddingService()
     
-    def save_document(self, nome, content, tipo, categoria, localizacao):
+    def save_document(self, nome, localizacao, job_position, categoria, skills, cursos_formacoes, experiencia ):
         
-        vector = self.embedder.embed(content)
-
         document_data = {
+            
+            
             "nome": nome,
-            "content": content,
-            "tipo": tipo,
-            "categoria": categoria,
             "localizacao": localizacao,
-            "embedding": vector,
+            "job_position": job_position,
+            "categoria": categoria,
+            "skills": skills,
+            "cursos_formacoes": cursos_formacoes,
+            "experiencia": experiencia,
             
         }
         
         response = self.client.table("documents").insert(document_data).execute()
+
+        if not response.data:
+            raise Exception("Erro ao inserir documento")
+
+        document_id = response.data[0]["id"]
+
+        generate_embeddings(document_id)
 
         return response.data
