@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
+#Configuração da API OpenAI
 class AIService:
     def __init__(self):
         api_key = os.getenv("API_KEY")
@@ -16,7 +16,8 @@ class AIService:
         
         self.client = OpenAI(api_key=api_key)
         self.model = 'gpt-4o-mini'
-        
+
+    #Função que extrai o texto de um PDF   
     def extrair_pdf(self, content: bytes) -> str:
         try:
             doc = fitz.open(stream=content, filetype="pdf")
@@ -35,25 +36,49 @@ class AIService:
         except json.JSONDecodeError:
             raise Exception("Resposta da IA não é um JSON válido")
     
+    #Função que utiliza da API OpenAI para extrair conteúdos específicos do PDF
     def extrair_requisitos_vaga(self, texto_vaga: str) -> dict:
         prompt = f"""
-        Você é um especialista em Recrutamento. Analise a descrição da vaga abaixo e extraia:
-        1. Um resumo focado APENAS nas habilidades técnicas, responsabilidades e requisitos obrigatórios.
-        2. A localização da vaga (Cidade/Estado) se houver.
-        3. A categoria da vaga (Tecnologia, Vendas, etc).
+        Você é um recrutador especialista. Analise a DESCRIÇÃO DA VAGA abaixo e extraia os requisitos técnicos e comportamentais.
+        Retorne APENAS um JSON válido.
         
+        REGRAS:
+        1. "skills": Liste as tecnologias, ferramentas e competências EXIGIDAS.
+        2. "localizacao": Se for remoto, considere a localizacao como Brasil. Se tiver cidade, padronize "Cidade - UF, País".
+        3. "cargo": O título principal da vaga.
+        4. "categoria": A área da vaga (ex: Tecnologia, Vendas, Saúde).
+        5. "senioridade": (Junior, Pleno, Senior, Especialista) - infira pelo texto.
 
-        Texto da vaga:
-        {texto_vaga}
 
-        Responda estritamente um JSON neste formato:
+        FORMATO JSON:
         {{
-            "localizacao": "Cidade - UF" (ou null),
-            "categoria": "Area" (ou null),
-            "descricao": "Descricao da vaga, sobre a empresa etc"
+            "cargo": "Titulo da Vaga",
+            "localizacao": "Localização Padronizada",
+            "categoria": "Area",
+            "skills": ["Skill1", "Skill2"],
+            "senioridade": "Nivel"
         }}
+
+        DESCRIÇÃO DA VAGA:
+        {texto_vaga}
         """
-        raise Exception("Erro ao processar vaga no Gemini")
+
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    { "role": "system", "content": "Você extrai requisitos de vagas em JSON estrito." },
+                    { "role": "user", "content": prompt }
+                ],
+                temperature=0,
+                response_format={ "type": "json_object" }
+            )
+
+            return json.loads(response.choices[0].message.content)
+        except Exception as e:
+            print(f"Erro na IA (Vaga): {e}")
+            # Retorna estrutura vazia para não quebrar a API
+            return {"cargo": "", "localizacao": "", "skills": [], "categoria": ""}
     
     def extrair_dados(self, texto_pdf: str):
         prompt = f"""
