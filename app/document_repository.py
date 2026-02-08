@@ -10,7 +10,6 @@ class DocumentRepository:
         
         document_data = {
             
-            
             "nome": nome,
             "localizacao": localizacao,
             "job_position": job_position,
